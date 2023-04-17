@@ -27,7 +27,22 @@ func routes() *chi.Mux {
 
 	apiRouter := chi.NewRouter()
 
+	apiRouter.Get("/readiness", handleReadiness)
+	apiRouter.Get("/err", handleErr)
+
 	router.Mount("/v1", apiRouter)
 
 	return router
+}
+
+func handleReadiness(w http.ResponseWriter, r *http.Request) {
+	type resp struct {
+		Status string `json:"status"`
+	}
+
+	respondWithJSON(w, http.StatusOK, &resp{Status: "ok"})
+}
+
+func handleErr(w http.ResponseWriter, r *http.Request) {
+	respondWithError(w, http.StatusInternalServerError, "Internal server error")
 }
