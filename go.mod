@@ -2,4 +2,7 @@ module github.com/6rian/feedgator
 
 go 1.20
 
-require github.com/go-chi/chi/v5 v5.0.8 // indirect
+require (
+	github.com/go-chi/chi/v5 v5.0.8 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
+)
