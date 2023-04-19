@@ -36,6 +36,7 @@ func (app *application) routes() *chi.Mux {
 	apiRouter.Get("/feeds", app.handleGetFeeds)
 	apiRouter.Post("/feeds", app.requireAuth(app.handleCreateFeed))
 
+	apiRouter.Get("/feed_follows", app.requireAuth(app.handleGetFeedFollowsByUserID))
 	apiRouter.Post("/feed_follows", app.requireAuth(app.handleCreateFeedFollow))
 	apiRouter.Delete("/feed_follows/{id}", app.requireAuth(app.handleDeleteFeedFollow))
 

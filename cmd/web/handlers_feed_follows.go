@@ -68,3 +68,16 @@ func (app *application) handleDeleteFeedFollow(w http.ResponseWriter, r *http.Re
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (app *application) handleGetFeedFollowsByUserID(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user").(database.User)
+
+	feedFollows, err := app.DB.GetFeedFollowsByUserID(r.Context(), user.ID)
+	if err != nil {
+		// TODO: add logging
+		respondWithError(w, http.StatusInternalServerError, "could not get feed follows")
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, feedFollows)
+}
