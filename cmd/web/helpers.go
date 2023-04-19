@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -28,6 +29,10 @@ func respondWithJSON(w http.ResponseWriter, status int, payload interface{}) {
 func parseAuthorizationHeader(authString, prefix string) (string, error) {
 	if utf8.RuneCountInString(authString) <= utf8.RuneCountInString(prefix) {
 		return "", errors.New("auth token missing")
+	}
+
+	if !strings.HasPrefix(authString, prefix) {
+		return "", errors.New("invalid authorization header")
 	}
 
 	token := authString[utf8.RuneCountInString(prefix):]
