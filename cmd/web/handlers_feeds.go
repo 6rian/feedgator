@@ -45,3 +45,14 @@ func (app *application) handleCreateFeed(w http.ResponseWriter, r *http.Request)
 
 	respondWithJSON(w, http.StatusCreated, feed)
 }
+
+func (app *application) handleGetFeeds(w http.ResponseWriter, r *http.Request) {
+	feeds, err := app.DB.GetFeeds(r.Context())
+	if err != nil {
+		// TODO: add logging
+		respondWithError(w, http.StatusInternalServerError, "could not retrieve feeds")
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, feeds)
+}
