@@ -33,6 +33,8 @@ func (app *application) routes() *chi.Mux {
 
 	apiRouter.Get("/readiness", handleReadiness)
 	apiRouter.Get("/err", handleErr)
+
+	apiRouter.Get("/users", app.handleGetUserByApiKey)
 	apiRouter.Post("/users", app.handleCreateUser)
 
 	router.Mount("/v1", apiRouter)
@@ -80,4 +82,20 @@ func (app *application) handleCreateUser(w http.ResponseWriter, r *http.Request)
 	}
 
 	respondWithJSON(w, http.StatusCreated, user)
+}
+
+func (app *application) handleGetUserByApiKey(w http.ResponseWriter, r *http.Request) {
+	apiKey, err := parseAuthorizationHeader(r.Header.Get("Authorization"), "ApiKey ")
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "a valid api key is required")
+		return
+	}
+
+	user, err := app.DB.GetUserByApiKey(r.Context(), apiKey)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "invalid api key")
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, user)
 }
