@@ -33,6 +33,8 @@ func (app *application) routes() *chi.Mux {
 	apiRouter.Get("/users", app.requireAuth(app.handleGetUserByApiKey))
 	apiRouter.Post("/users", app.handleCreateUser)
 
+	apiRouter.Post("/feeds", app.requireAuth(app.handleCreateFeed))
+
 	router.Mount("/v1", apiRouter)
 
 	return router
